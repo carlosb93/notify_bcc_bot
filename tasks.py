@@ -23,7 +23,7 @@ def home():
 def update_msg():
     headers= request.headers
     if not headers.get('Authorization'):
-        return Response('Debe enviar los headers requeridos',200)
+        return Response('Debe enviar los headers requeridos',400)
     else:
         if headers.get('Authorization') == 'Bearer {}'.format(API_TOKEN):
 
@@ -47,7 +47,7 @@ def update_msg():
             except:
                 return Response('Error',500)
         else:
-            return Response('El token es invalido',200)
+            return Response('El token es invalido',400)
 
     
 
