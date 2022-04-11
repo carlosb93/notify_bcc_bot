@@ -39,7 +39,7 @@ Session = scoped_session(DBSession)
 s = Session()
 
 def to_int(current_date):
-    date = (current_date.year*10000000000 + current_date.month * 100000000 + current_date.day * 1000000 + current_date.hour*10000 + current_date.minute*100 + current_date.second)
+    date = (current_date.year*10000000000 + current_date.month * 100000000 + current_date.day * 1000000 + 00*10000 + 00*100 + 00)
     return date
 
 def is_registered(uid):
