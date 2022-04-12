@@ -5,6 +5,7 @@ import time
 import contextlib
 from data.db_map import Base, Mensajes, User, Settings, Settings4User
 import sqlalchemy
+import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
@@ -36,6 +37,10 @@ Session = scoped_session(DBSession)
 # and represents a "staging zone" for all the objects loaded into the
 # database session object. 
 s = Session()
+
+def to_int(current_date):
+    date = (current_date.year*10000000000 + current_date.month * 100000000 + current_date.day * 1000000 + 00*10000 + 00*100 + 00)
+    return date
 
 def is_registered(uid):
     user = get_user(uid=uid)
@@ -166,10 +171,11 @@ def add_msg(type=None,phone=None,text=None,bank=None,status=None):
     s.commit()
     s.close()
     
-    
 
 def get_msg(phone=None):
-    mensaje = s.query(Mensajes).filter(Mensajes.phone == phone).order_by(Mensajes.id.desc()).limit(5)
+    date = to_int(datetime.datetime.now())
+
+    mensaje = s.query(Mensajes).filter(Mensajes.phone == phone).filter(Mensajes.created_at > date).order_by(Mensajes.id.desc())
     if mensaje:
         try:
             mensaje = mensaje.all()
@@ -182,6 +188,7 @@ def get_msg(phone=None):
             pass
         
 def get_msg_all():
+    now = datetime.datetime.now()
     mensaje = s.query(Mensajes).filter(Mensajes.status == True)
     if mensaje:
         try:
@@ -415,14 +422,7 @@ def get_setting_alert_left(settings_user=None, kind=None):
 
 def add_user(name, lang=None, class_list=None, level=None, guild_name=None, guild_tag=None, castle=None, attack=None, defence=None, arroba=None, tgid=None, tgname=None):
     if not guild_name:        
-        if guild_tag:
-            guild = get_guild(tag=guild_tag)
-            if guild:
-                guild_name = guild.name
-            else:
-                guild_name = 'Unknown Guild'
-        else:
-            guild_name = 'Unknown Guild'
+        guild_name = 'Unknown Guild'
     if class_list:
         if len(class_list) == 2:
             s.add(User(name=name, lang=None, level=level, class1=class_list[0], class2=class_list[1], is_subcommander=0, guild_id=guild_name, attack=attack, defence=defence, castle=castle, arroba=arroba, tgid=tgid, tgname=tgname))

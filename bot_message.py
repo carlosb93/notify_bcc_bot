@@ -181,13 +181,19 @@ def get_user_notifications(phone=None):
     # Settings4User todos los settings activos por el usuario
     msg_user = db.get_msg(phone=phone)
     if msg_user:
-        for a in msg_user:
-            
-            res += '- {}\n{}\n\n'.format(a.bank,a.text.replace('\\n','\n'))
-            res += '----------------------------\n'
-           
-        
-        return res
+        if msg_user.count() > 5:
+            splitedSize = 5
+            a_splited = [msg_user[x:x+splitedSize] for x in range(0, len(msg_user), splitedSize)]
+            for a in a_splited:
+                for b in a:
+                    res += '-{}-\n- {}\n{}\n\n'.format(datetime.datetime.fromtimestamp(b.created_at / 1e3),b.bank,b.text.replace('\\n','\n'))
+                    res += '----------------------------\n'
+                    return res
+        else:
+            for b in msg_user:
+                res += '-{}-\n- {}\n{}\n\n'.format(datetime.datetime.fromtimestamp(b.created_at / 1e3),b.bank,b.text.replace('\\n','\n'))
+                res += '----------------------------\n'
+                return res
     else:
         res += '----No hay mensajes recientes---- \n\n'
         return res
