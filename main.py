@@ -161,11 +161,11 @@ async def check_db_alert(bot):
           
             if mensaje.status:
                 db.unset_msg(id=mensaje.id)
-                await alerta_telegram(type=mensaje.type,phone=mensaje.phone,text=mensaje.text,bank=mensaje.bank,status=mensaje.status)
+                await alerta_telegram(type=mensaje.type,phone=mensaje.phone,text=mensaje.text,bank=mensaje.bank,status=mensaje.status,created_at=mensaje.created_at)
             
            
     
-async def alerta_telegram(type=None,phone=None,text=None,bank=None,status=None):
+async def alerta_telegram(type=None,phone=None,text=None,bank=None,status=None,created_at=None):
     users = db.get_all_users()
     formated = '⚠️⚠️⚠️ Alerta  ⚠️⚠️⚠️\n'
     for u in users:
@@ -175,7 +175,9 @@ async def alerta_telegram(type=None,phone=None,text=None,bank=None,status=None):
                 for a in settings_user:
                     settings = db.get_setting_alert(settings_user=a,kind='alert')
                     formated +="<b>{}</b>\n\n".format(bank)
-                    formated += "{}\n".format(text.replace('\\n','\n'))
+                    formated += "{}\n\n".format(text.replace('\\n','\n'))
+                    formated += "-------------------------\n"
+                    formated += "Fecha {}\n".format(created_at)
                     if settings:
                         await bot.send_message(u.tgid, formated, disable_notification=True, parse_mode=types.ParseMode.HTML)
                     else:

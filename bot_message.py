@@ -177,23 +177,14 @@ def get_user_alert_status_url(tgid=None):
         return res
 
 def get_user_notifications(phone=None):
-    res = "🔊 historial de mensajes:\n\n"
+    res = "🔊 Historial de mensajes, últimas 10 notificaciones:\n\n"
     # Settings4User todos los settings activos por el usuario
     msg_user = db.get_msg(phone=phone)
     if msg_user:
-        if msg_user.count() > 5:
-            splitedSize = 5
-            a_splited = [msg_user[x:x+splitedSize] for x in range(0, len(msg_user), splitedSize)]
-            for a in a_splited:
-                for b in a:
-                    res += '-{}-\n- {}\n{}\n\n'.format(datetime.datetime.fromtimestamp(b.created_at / 1e3),b.bank,b.text.replace('\\n','\n'))
-                    res += '----------------------------\n'
-                    return res
-        else:
-            for b in msg_user:
-                res += '-{}-\n- {}\n{}\n\n'.format(datetime.datetime.fromtimestamp(b.created_at / 1e3),b.bank,b.text.replace('\\n','\n'))
-                res += '----------------------------\n'
-                return res
+        for b in msg_user:           
+            res += 'Fecha {}\n- {}\n\n{}\n\n'.format(b.created_at,b.bank,b.text.replace('\\n','\n'))
+            res += '----------------------------\n'
+        return res
     else:
         res += '----No hay mensajes recientes---- \n\n'
         return res

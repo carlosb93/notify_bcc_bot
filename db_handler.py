@@ -156,7 +156,7 @@ def set_msg(type=None,phone=None,text=None,bank=None,status=None):
             mensaje.text = text
             mensaje.bank = bank
             mensaje.status = True
-            mensaje.created_at = time.time()
+            mensaje.created_at = datetime.datetime.now()
             s.add(mensaje)
             s.commit()
             s.close()
@@ -167,15 +167,13 @@ def set_msg(type=None,phone=None,text=None,bank=None,status=None):
             
         
 def add_msg(type=None,phone=None,text=None,bank=None,status=None):
-    s.add(Mensajes(type=type, phone=phone, text=text, bank=bank, status=True, created_at=time.time()))
+    s.add(Mensajes(type=type, phone=phone, text=text, bank=bank, status=True, created_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
     s.commit()
     s.close()
     
 
 def get_msg(phone=None):
-    date = to_int(datetime.datetime.now())
-
-    mensaje = s.query(Mensajes).filter(Mensajes.phone == phone).filter(Mensajes.created_at > date).order_by(Mensajes.id.desc())
+    mensaje = s.query(Mensajes).filter(Mensajes.phone == phone).order_by(Mensajes.id.desc()).limit(10)
     if mensaje:
         try:
             mensaje = mensaje.all()
