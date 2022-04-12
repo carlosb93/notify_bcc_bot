@@ -238,7 +238,7 @@ async def process_callback_button(callback_query: types.CallbackQuery):
 async def handle_contact(message: types.Message, state: FSMContext):
     if message['contact']:
         if message['contact']['user_id'] == message['from']['id']:
-            db.update_user_phone(phone=message['contact']['phone_number'],tgid=message['contact']['user_id'])   
+            db.update_user_phone(phone=message['contact']['phone_number'].replace('+',''),tgid=message['contact']['user_id'])   
             # await bot.send_message(message['from']['id'], bm.get_static_message('Subscribed',ulang='Spanish'), disable_notification=True, parse_mode=types.ParseMode.HTML)         
             await go_to('main', message, bm.get_static_message('Subscribed',ulang='Spanish'))
             # await message.answer(bm.get_static_message('Subscribed',ulang='Spanish'),parse_mode=types.ParseMode.HTML)
