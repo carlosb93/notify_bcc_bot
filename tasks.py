@@ -12,7 +12,7 @@ from flask import Flask, request, Response
 from config import TOKEN, REQUEST_KWARGS, API_TOKEN
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 
 
 @app.route('/', methods=['GET'])
@@ -50,8 +50,8 @@ def update_msg():
             return Response('El token es invalido',400)
 
     
-
-app.run()
+def run():
+    app.run()
 
 
                         
