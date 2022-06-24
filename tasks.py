@@ -49,9 +49,8 @@ def update_msg():
         else:
             return Response('El token es invalido',400)
 
-    
-def run():
-    app.run()
+ 
+app.run()
 
 
                         

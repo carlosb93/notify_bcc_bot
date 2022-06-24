@@ -2,9 +2,9 @@ import time
 import logging
 import asyncio
 import requests
-from threading import Thread
+# import Thread
 
-from tasks import run
+# import tasks
 import db_handler as db
 import bot_message as bm
 
@@ -303,7 +303,7 @@ def my_listener(event):
 def schedule_all_tasks():
     bgscheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
     bgscheduler.start()
-    scheduler.add_job(run, name='tasks')   
+    # scheduler.add_job(run, name='tasks')   
     scheduler.add_job(check_db_alert, 'interval', seconds=30, name='db_check', kwargs={'bot': bot})   
     scheduler.start()     
     
